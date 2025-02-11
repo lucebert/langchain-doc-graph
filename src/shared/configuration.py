@@ -30,7 +30,7 @@ class BaseConfiguration:
         Literal["elastic-local", "elastic", "pinecone", "mongodb"],
         {"__template_metadata__": {"kind": "retriever"}},
     ] = field(
-        default="elastic-local",
+        default="pinecone",
         metadata={
             "description": "The vector store provider to use for retrieval. Options are 'elastic', 'pinecone', or 'mongodb'."
         },

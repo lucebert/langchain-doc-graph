@@ -2,7 +2,9 @@
   "dependencies": ["."],
   "graphs": {
     "indexer": "./src/index_graph/graph.py:graph",
-    "retrieval_graph": "./src/retrieval_graph/graph.py:graph"
+    "retrieval_graph": "./src/retrieval_graph/graph.py:graph",
+    "self_rag": "./src/self_rag/graph.py:graph",
+    "simple_rag": "./src/simple_rag/graph.py:graph"
   },
   "env": ".env"
 }

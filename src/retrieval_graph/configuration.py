@@ -14,7 +14,7 @@ class AgentConfiguration(BaseConfiguration):
     """The configuration for the agent."""
 
     # models
-
+    
     query_model: Annotated[str, {"__template_metadata__": {"kind": "llm"}}] = field(
         default="anthropic/claude-3-haiku-20240307",
         metadata={

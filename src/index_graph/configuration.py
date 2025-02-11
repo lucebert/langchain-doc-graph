@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from shared.configuration import BaseConfiguration
 
@@ -19,10 +19,3 @@ class IndexConfiguration(BaseConfiguration):
     This class defines the parameters needed for configuring the indexing and
     retrieval processes, including embedding model selection, retriever provider choice, and search parameters.
     """
-
-    docs_file: str = field(
-        default=DEFAULT_DOCS_FILE,
-        metadata={
-            "description": "Path to a JSON file containing default documents to index."
-        },
-    )
