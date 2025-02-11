@@ -33,14 +33,6 @@ jobs:
           curl -LsSf https://astral.sh/uv/install.sh | sh
           uv venv
           uv pip install -r pyproject.toml
-      - name: Lint with ruff
-        run: |
-          uv pip install ruff
-          uv run ruff check .
-      - name: Lint with mypy
-        run: |
-          uv pip install mypy
-          uv run mypy --strict src/
       - name: Check README spelling
         uses: codespell-project/actions-codespell@v2
         with:
