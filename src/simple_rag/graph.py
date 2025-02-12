@@ -1,20 +1,17 @@
 ### Nodes
 
+from langchain import hub
+from langchain_core.messages import HumanMessage
+from langchain_openai import ChatOpenAI
 from langgraph.graph import END, START, StateGraph
 
-from self_rag.nodes.answer_grader import answer_grader
-from self_rag.nodes.generate import rag_chain, format_docs
-from self_rag.nodes.hallucination_grader import hallucination_grader
-from self_rag.nodes.question_rewriter import question_rewriter
-from self_rag.nodes.retrieval_grader import retrieval_grader
-from self_rag.state import GraphState, InputState
 from shared import retrieval
 from shared.configuration import BaseConfiguration
+from simple_rag.state import GraphState, InputState
 
 
-def retrieve(state, *, config):
-    """
-    Retrieve documents
+def retrieve(state: GraphState, *, config) -> dict[str, list[str] | str]: 
+    """Retrieve documents
 
     Args:
         state (dict): The current graph state
@@ -23,15 +20,16 @@ def retrieve(state, *, config):
         state (dict): New key added to state, documents, that contains retrieved documents
     """
     print("---RETRIEVE---")
-    question = state["question"]
+    # Extract human messages and concatenate them
+    question = " ".join(msg.content for msg in state.messages if isinstance(msg, HumanMessage))
 
     # Retrieval
     with retrieval.make_retriever(config) as retriever:
         documents = retriever.invoke(question)
-        return {"documents": documents, "question": question}
+        return {"documents": documents, "message": state.messages}
 
 
-def generate(state):
+async def generate(state: GraphState):
     """
     Generate answer
 
@@ -42,22 +40,28 @@ def generate(state):
         state (dict): New key added to state, generation, that contains LLM generation
     """
     print("---GENERATE---")
-    question = state["question"]
-    documents = state["documents"]
-    total_iterations = state.get("total_iterations", 0)
+    messages = state.messages
+    documents = state.documents
 
     # RAG generation
-    generation = rag_chain.invoke({"context": documents, "question": question})
-    return {"documents": documents, "question": question, "generation": generation, "total_iterations": total_iterations + 1}
+    # Prompt
+    prompt = hub.pull("self-rag")
 
+    # LLM
+    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
+    
 
+    # Chain
+    rag_chain = prompt + messages | llm
+    response = await rag_chain.ainvoke({"context" : documents})
+    return {"messages": [response], "documents": documents}
 
 
 workflow = StateGraph(GraphState, input=InputState, config_schema=BaseConfiguration)
 
 # Define the nodes
-workflow.add_node("retrieve", retrieve)  # retrieve
-workflow.add_node("generate", generate)  # generatae
+workflow.add_node("retrieve", retrieve)
+workflow.add_node("generate", generate)
 
 # Build graph
 workflow.add_edge(START, "retrieve")
