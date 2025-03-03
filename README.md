@@ -1,22 +1,19 @@
-# LangChain Documentation RAG
+# LangChainDoc.com - Backend RAG System
 
-A simple RAG (Retrieval Augmented Generation) system for querying LangChain documentation using LangGraph.
-
-[![CI](https://github.com/langchain-ai/rag-research-agent-template/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/langchain-ai/rag-research-agent-template/actions/workflows/unit-tests.yml)
+The backend powering [LangChainDoc.com](https://langchaindoc.com) - a RAG system for querying LangChain documentation.
 
 ## Overview
 
-This project provides a simple way to query LangChain documentation using a retrieval-based system. It uses:
+This project provides the backend for LangChainDoc.com, enabling querying of LangChain documentation. It uses:
 
-- LangGraph for orchestrating the retrieval and response generation
-- Vector database for storing and retrieving documentation content 
-- LLMs for generating natural language responses
+- **LangGraph** for orchestrating the retrieval and response generation
+- **Vector database** for storing and retrieving documentation content
+- **LLMs** for generating responses with developer insights
 
 ## Features
 
-- Document indexing for LangChain documentation
-- Natural language querying of documentation content
-- Contextual responses based on retrieved documentation
+- **Semantic Search**: Find relevant documentation based on meaning
+- **Context-Aware Responses**: Responses consider multiple documentation sources
 
 ## Getting Started
 
@@ -32,27 +29,28 @@ ELASTICSEARCH_URL=<your-url>
 ELASTICSEARCH_API_KEY=<your-key>
 ```
 
-3. Index the documentation:
-```python
-python index.py
-```
+## Running with LangGraph Studio
 
-4. Start querying the documentation:
-```python
-python query.py "How do I use LangChain agents?"
-```
+- **Mac users**: Use LangGraph Studio directly
+- **Windows users**: Follow [this tutorial](https://langchain-ai.github.io/langgraph/tutorials/langgraph-platform/local-server/#langgraph-studio-web-ui) to set up LangGraph Studio
 
-## Customize
+## Integration with Frontend
 
-You can customize the:
-- Vector store (Elasticsearch, MongoDB, Pinecone)
-- Embedding model
-- Language model for responses
-- System prompts and retrieval parameters
+This backend system works with the [LangChainDoc Client](https://github.com/lucebert/langchain-doc-client) to provide a complete user experience.
 
-Check the configuration files for available options.
+## About the Creator
 
-## Development
+This project is maintained by [Luc Ebert](https://www.linkedin.com/in/luc-ebert/), a LangChain developer.
 
-See the [LangGraph documentation](https://github.com/langchain-ai/langgraph) for more details on extending functionality.
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+[MIT License](LICENSE)
+
+## Contact
+
+For questions and support, please open an issue in the repository.
 
