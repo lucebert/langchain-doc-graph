@@ -22,15 +22,9 @@ This project provides the backend for LangChainDoc.com, enabling querying of Lan
 cp .env.example .env 
 ```
 
-2. Add your API keys to `.env`:
-```
-OPENAI_API_KEY=<your-key>
-ELASTICSEARCH_URL=<your-url>
-ELASTICSEARCH_API_KEY=<your-key>
-```
+2. Add your API keys and configuration to `.env`
 
-## Running with LangGraph Studio
-
+3. Running with LangGraph Studio
 - **Mac users**: Use LangGraph Studio directly
 - **Windows users**: Follow [this tutorial](https://langchain-ai.github.io/langgraph/tutorials/langgraph-platform/local-server/#langgraph-studio-web-ui) to set up LangGraph Studio
 
