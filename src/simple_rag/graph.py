@@ -2,15 +2,15 @@
 
 from langchain import hub
 from langchain_core.messages import HumanMessage
-from langchain_openai import ChatOpenAI
 from langgraph.graph import END, START, StateGraph
 
 from shared import retrieval
-from shared.configuration import BaseConfiguration
+from shared.utils import load_chat_model
+from simple_rag.configuration import RagConfiguration
 from simple_rag.state import GraphState, InputState
 
 
-def retrieve(state: GraphState, *, config) -> dict[str, list[str] | str]: 
+def retrieve(state: GraphState, *, config: RagConfiguration) -> dict[str, list[str] | str]: 
     """Retrieve documents
 
     Args:
@@ -29,7 +29,7 @@ def retrieve(state: GraphState, *, config) -> dict[str, list[str] | str]:
         return {"documents": documents, "message": state.messages}
 
 
-async def generate(state: GraphState):
+async def generate(state: GraphState, *, config: RagConfiguration):
     """
     Generate answer
 
@@ -43,21 +43,18 @@ async def generate(state: GraphState):
     messages = state.messages
     documents = state.documents
 
-    # RAG generation
-    # Prompt
     prompt = hub.pull("langchaindoc/simple-rag")
-
-    # LLM
-    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
     
+    configuration = RagConfiguration.from_runnable_config(config)
+    model = load_chat_model(configuration.model)
 
     # Chain
-    rag_chain = prompt + messages | llm
+    rag_chain = prompt + messages | model
     response = await rag_chain.ainvoke({"context" : documents})
     return {"messages": [response], "documents": documents}
 
 
-workflow = StateGraph(GraphState, input=InputState, config_schema=BaseConfiguration)
+workflow = StateGraph(GraphState, input=InputState, config_schema=RagConfiguration)
 
 # Define the nodes
 workflow.add_node("retrieve", retrieve)
