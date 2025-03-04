@@ -1,4 +1,4 @@
-# LangChainDoc.com - Backend RAG System
+# LangChainDoc.com - Backend RAG System 🦜🔗
 
 The backend powering [LangChainDoc.com](https://langchaindoc.com) - a RAG system for querying LangChain documentation.
 
@@ -15,6 +15,14 @@ This project provides the backend for LangChainDoc.com, enabling querying of Lan
 - **Semantic Search**: Find relevant documentation based on meaning
 - **Context-Aware Responses**: Responses consider multiple documentation sources
 
+## Supported Providers
+
+This project has been tested with:
+- **Vector Database**: Pinecone
+- **LLM**: OpenAI
+
+The system is structured to work with other providers, but implementations for alternatives would need to be added.
+
 ## Getting Started
 
 1. Copy `.env.example` to `.env`
@@ -26,7 +34,7 @@ cp .env.example .env
 
 3. Running with LangGraph Studio
 - **Mac users**: Use LangGraph Studio directly
-- **Windows users**: Follow [this tutorial](https://langchain-ai.github.io/langgraph/tutorials/langgraph-platform/local-server/#langgraph-studio-web-ui) to set up LangGraph Studio
+- **Windows/Linux users**: Follow [this tutorial](https://langchain-ai.github.io/langgraph/tutorials/langgraph-platform/local-server/#langgraph-studio-web-ui) to set up LangGraph Studio
 
 ## Integration with Frontend
 
