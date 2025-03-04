@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from shared.configuration import BaseConfiguration
 
@@ -19,3 +19,4 @@ class IndexConfiguration(BaseConfiguration):
     This class defines the parameters needed for configuring the indexing and
     retrieval processes, including embedding model selection, retriever provider choice, and search parameters.
     """
+    api_key: str = field(default="", metadata={"description": "The API key for indexing documents."})

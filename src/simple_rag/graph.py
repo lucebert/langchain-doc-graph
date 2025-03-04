@@ -45,7 +45,7 @@ async def generate(state: GraphState):
 
     # RAG generation
     # Prompt
-    prompt = hub.pull("self-rag")
+    prompt = hub.pull("langchaindoc/simple-rag")
 
     # LLM
     llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
