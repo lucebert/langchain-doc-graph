@@ -20,3 +20,4 @@ class IndexConfiguration(BaseConfiguration):
     retrieval processes, including embedding model selection, retriever provider choice, and search parameters.
     """
     api_key: str = field(default="", metadata={"description": "The API key for indexing documents."})
+    pinecone_index: str = field(default="langchain-doc", metadata={"description": "The Pinecone index to use for indexing documents."})

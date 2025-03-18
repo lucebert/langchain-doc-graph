@@ -14,6 +14,7 @@ from langgraph.graph import END, START, StateGraph
 from index_graph.configuration import IndexConfiguration
 from index_graph.state import IndexState, InputState
 from shared import retrieval
+from shared.utils import load_pinecone_index
 
 
 def check_index_config(state: IndexState, *, config: Optional[RunnableConfig] = None) -> dict[str, str]:
@@ -94,14 +95,20 @@ async def index_url(url: str, config: IndexConfiguration) -> List[Document]:
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     docs = text_splitter.split_documents(docs)
 
-    with retrieval.make_retriever(config) as retriever:
+    # Delete all existing documents with the same prefix
+    index = load_pinecone_index(config.pinecone_index)
+    print(f"Deleting {url}#")
+    for ids in index.list(prefix=f"{url}#"):
+        print(f"Deleting {ids}")
+        index.delete(ids=ids)
 
-        await retriever.vectorstore.aadd_texts(
-            #namespace= "langgraph" if "langgraph" in url else "langchain",
-            texts=[doc.page_content for doc in docs],
-            metadatas=[doc.metadata for doc in docs],
-            id_prefix=url,
-        )
+    # Add the new documents to the index
+    # with retrieval.make_retriever(config) as retriever:
+        # await retriever.vectorstore.aadd_texts(
+        #     texts=[doc.page_content for doc in docs],
+        #     metadatas=[doc.metadata for doc in docs],
+        #     id_prefix=url,
+        # )
 
     return docs
 

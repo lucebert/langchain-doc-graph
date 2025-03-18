@@ -4,12 +4,13 @@ Functions:
     format_docs: Convert documents to an xml-formatted string.
     load_chat_model: Load a chat model from a model name.
 """
-
+import os
 from typing import Optional
 
 from langchain.chat_models import init_chat_model
 from langchain_core.documents import Document
 from langchain_core.language_models import BaseChatModel
+from pinecone import Index, Pinecone
 
 
 def _format_doc(doc: Document) -> str:
@@ -62,6 +63,17 @@ def format_docs(docs: Optional[list[Document]]) -> str:
 {formatted}
 </documents>"""
 
+def load_pinecone_index(index_name: str) -> Index:
+    """Load a Pinecone index from a name.
+
+    Args:
+        index_name (str): The name of the Pinecone index to load.
+
+    Returns:
+        Index: The Pinecone index.
+    """
+    pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
+    return pc.Index(index_name)
 
 def load_chat_model(fully_specified_name: str) -> BaseChatModel:
     """Load a chat model from a fully specified name.
