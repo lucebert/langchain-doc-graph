@@ -56,8 +56,8 @@ async def make_pinecone_retriever(
             dimension=1536,
             metric="cosine",
             spec=ServerlessSpec(
-                cloud="aws",  # ou "gcp"
-                region="us-east-1" # adapte à ton projet Pinecone !
+                cloud="aws",  # or "gcp"
+                region="us-east-1" # adapt
             )
         )
         print(f"✅ Index '{index_name}' créé.")
