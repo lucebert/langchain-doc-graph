@@ -5,9 +5,8 @@ vector store backends, specifically Elasticsearch, Pinecone, and MongoDB.
 """
 
 import os
-from contextlib import contextmanager
-from typing import Generator
-
+from contextlib import contextmanager, asynccontextmanager
+from typing import AsyncGenerator, Tuple
 from langchain_core.embeddings import Embeddings
 from langchain_core.runnables import RunnableConfig
 from langchain_core.vectorstores import VectorStoreRetriever
@@ -29,33 +28,68 @@ def make_text_encoder(model: str) -> Embeddings:
 
 
 ## Retriever constructors
-@contextmanager
-def make_pinecone_retriever(
+@asynccontextmanager
+async def make_pinecone_retriever(
     configuration: BaseConfiguration, embedding_model: Embeddings
-) -> Generator[VectorStoreRetriever, None, None]:
-    """Configure this agent to connect to a specific pinecone index."""
+) -> AsyncGenerator[Tuple[VectorStoreRetriever, "PineconeVectorStore"], None]:
+    """Configure this agent to connect to a specific Pinecone index and return both retriever and vectorstore."""
+
     from langchain_pinecone import PineconeVectorStore
+    from pinecone import Pinecone, ServerlessSpec
 
-    vstore = PineconeVectorStore.from_existing_index(
-        os.environ["PINECONE_INDEX_NAME"], embedding=embedding_model
+    pinecone_client = Pinecone(
+        api_key=os.environ["PINECONE_API_KEY"],
+        environment=os.environ["PINECONE_ENVIRONMENT"]
     )
-    yield vstore.as_retriever(search_kwargs=configuration.search_kwargs)
 
-@contextmanager
-def make_retriever(
+    index_name = os.environ["PINECONE_INDEX_NAME"]
+    indexes = pinecone_client.list_indexes().names()
+
+    print("🔎 Index disponibles :", indexes)
+
+    if index_name not in indexes:
+        print(f"⚠️ L'index '{index_name}' n'existe pas. Création...")
+       # pinecone_client.create_index(name=index_name, dimension=1536, metric="cosine")
+
+        pinecone_client.create_index(
+            name=index_name,
+            dimension=1536,
+            metric="cosine",
+            spec=ServerlessSpec(
+                cloud="aws",  # ou "gcp"
+                region="us-east-1" # adapte à ton projet Pinecone !
+            )
+        )
+        print(f"✅ Index '{index_name}' créé.")
+
+    vectorstore = PineconeVectorStore.from_existing_index(
+        index_name=index_name,
+        embedding=embedding_model
+    )
+
+    retriever = vectorstore.as_retriever(search_kwargs=configuration.search_kwargs)
+
+    yield retriever, vectorstore
+
+@asynccontextmanager
+async def make_retriever(
     config: RunnableConfig,
-) -> Generator[VectorStoreRetriever, None, None]:
-    """Create a retriever for the agent, based on the current configuration."""
+) -> AsyncGenerator[Tuple[VectorStoreRetriever, object], None]:
+    """
+    Create a retriever for the agent, based on the current configuration.
+    Returns both the retriever and the underlying vectorstore (if available).
+    """
     configuration = BaseConfiguration.from_runnable_config(config)
     embedding_model = make_text_encoder(configuration.embedding_model)
+
     match configuration.retriever_provider:
         case "pinecone":
-            with make_pinecone_retriever(configuration, embedding_model) as retriever:
-                yield retriever
+            async with make_pinecone_retriever(configuration, embedding_model) as (retriever, vectorstore):
+                yield retriever, vectorstore
 
         case _:
             raise ValueError(
-                "Unrecognized retriever_provider in configuration. "
+                "❌ Unrecognized retriever_provider in configuration. "
                 f"Expected one of: {', '.join(BaseConfiguration.__annotations__['retriever_provider'].__args__)}\n"
                 f"Got: {configuration.retriever_provider}"
             )
