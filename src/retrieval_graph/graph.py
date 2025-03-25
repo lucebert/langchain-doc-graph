@@ -14,9 +14,8 @@ from langgraph.graph import END, START, StateGraph
 
 from retrieval_graph.configuration import AgentConfiguration
 from retrieval_graph.researcher_graph.graph import graph as researcher_graph
-from retrieval_graph.state import AgentState, InputState, Router
+from retrieval_graph.state import AgentState, InputState
 from shared.utils import format_docs, load_chat_model
-
 
 
 async def respond_to_general_query(
