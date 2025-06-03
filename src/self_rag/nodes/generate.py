@@ -5,7 +5,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
 
 # Prompt
-prompt = hub.pull("self-rag")
+prompt = hub.pull("langchaindoc/self-rag")
 
 # LLM
 llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)

@@ -23,18 +23,31 @@ This project has been tested with:
 
 The system is structured to work with other providers, but implementations for alternatives would need to be added.
 
+## Prerequisites
+  Before you begin, ensure you have the following API keys for:
+        
+- [LangSmith](https://smith.langchain.com/settings?_gl=1*1abavxa*_ga*MTExOTQ4NDEzMy4xNzQ4ODcyNzQ3*_ga_47WX3HKKY2*czE3NDg4NzI3NDYkbzEkZzEkdDE3NDg4NzQ3OTAkajMxJGwwJGgw)
+- [OpenAI](https://platform.openai.com/signup) (for LLM access)
+- [Pinecone](https://www.pinecone.io/start/) (for vector database access)
 ## Getting Started
 
 1. Copy `.env.example` to `.env`
 ```bash
 cp .env.example .env 
 ```
-
 2. Add your API keys and configuration to `.env`
 
-3. Running with LangGraph Studio
-- **Mac users**: Use LangGraph Studio directly
-- **Windows/Linux users**: Follow [this tutorial](https://langchain-ai.github.io/langgraph/tutorials/langgraph-platform/local-server/#langgraph-studio-web-ui) to set up LangGraph Studio
+3. Install the LangGraph CLI
+```bash
+pip install --upgrade "langgraph-cli[inmem]"
+```
+
+4. Launch LangGraph Server
+Start the LangGraph API server locally:
+
+```bash
+langgraph dev
+```
 
 ## Integration with Frontend
 
