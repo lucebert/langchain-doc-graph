@@ -1,6 +1,6 @@
 # LangChainDoc.com - Backend RAG System 🦜🔗
 
-The backend powering [LangChainDoc.com](https://langchaindoc.com) - a RAG system for querying LangChain documentation.
+The backend powering a RAG system for querying LangChain documentation
 
 ## Overview
 
