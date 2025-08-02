@@ -29,6 +29,7 @@ The system is structured to work with other providers, but implementations for a
 - [LangSmith](https://smith.langchain.com/settings?_gl=1*1abavxa*_ga*MTExOTQ4NDEzMy4xNzQ4ODcyNzQ3*_ga_47WX3HKKY2*czE3NDg4NzI3NDYkbzEkZzEkdDE3NDg4NzQ3OTAkajMxJGwwJGgw)
 - [OpenAI](https://platform.openai.com/signup) (for LLM access)
 - [Pinecone](https://www.pinecone.io/start/) (for vector database access)
+
 ## Getting Started
 
 1. Copy `.env.example` to `.env`
